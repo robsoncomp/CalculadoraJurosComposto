@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CalculaJuros.API</name>
+    </assembly>
+    <members>
+        <member name="M:CalculaJuros.API.Controllers.CalculaJurosController.Get(System.Double,System.Int32)">
+            <summary>
+            Método Calcula Juros Composto
+            </summary>
+            <param name="valorInicial">Valor inicial</param>
+            <param name="meses">Número de meses utilizado para o calculo</param>   
+            <response code="200">Resultado</response>
+        </member>
+        <member name="M:CalculaJuros.API.Controllers.ShowCodeController.Get">
+            <summary>
+            Método retorna url de onde encontra-se o código no github
+            </summary>         
+            <response code="200">URL Github</response>
+        </member>
+    </members>
+</doc>
