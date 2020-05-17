@@ -1,8 +1,6 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using CalculaJuros.API.APIConsumer;
+﻿using CalculoJuros.Application.Interfaces.IServices;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace CalculaJuros.API.Controllers
 {
@@ -11,6 +9,14 @@ namespace CalculaJuros.API.Controllers
     [Produces("application/json")]
     public class CalculaJurosController : ControllerBase
     {
+        private const string mensagemErro = "Erro Interno: Não foi possível se comunicar com a API da taxa de juros";
+        private readonly ICalculoJurosService _calculoJurosService;
+
+        public CalculaJurosController(ICalculoJurosService calculoJurosService)
+        {
+            _calculoJurosService = calculoJurosService;
+        }
+
         /// <summary>
         /// Método Calcula Juros Composto
         /// </summary>
@@ -18,30 +24,16 @@ namespace CalculaJuros.API.Controllers
         /// <param name="meses">Número de meses utilizado para o calculo</param>   
         /// <response code="200">Resultado</response>
         [HttpGet]
-        public string Get(double valorInicial = 0, int meses = 0)
+        public async Task<string> GetAsync(double valorInicial = 0, int meses = 0)
         {
-            double taxa = ObterTaxaJuros();
-            double resultado = CalcularJurosCompostos(valorInicial, meses, taxa);
-            return FormatarValorDoubleParaDuasCasasDecimais(resultado);
+            double taxa = await _calculoJurosService.ObterTaxaJurosAsync();
+            if (taxa == 0)
+                return mensagemErro;
+
+            double resultado = _calculoJurosService.CalcularJurosCompostos(valorInicial, meses, taxa);
+            return _calculoJurosService.FormatarValorDoubleParaDuasCasasDecimais(resultado);
         }
 
-        private static double ObterTaxaJuros()
-        {
-            double resultado;
-
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://localhost:50401/");
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var APIJurosClient = new APIJurosClient(client);
-                resultado = APIJurosClient.ObterTaxaJuros();
-            }
-            return resultado;
-        }
-
-        private static double CalcularJurosCompostos(double valorInicial, int meses, double taxa) => valorInicial * Math.Pow(1 + taxa, meses);
-
-        private static string FormatarValorDoubleParaDuasCasasDecimais(double num) => (num).ToString("N2");
+       
     }
 }

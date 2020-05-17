@@ -4,7 +4,7 @@
         <name>CalculaJuros.API</name>
     </assembly>
     <members>
-        <member name="M:CalculaJuros.API.Controllers.CalculaJurosController.Get(System.Double,System.Int32)">
+        <member name="M:CalculaJuros.API.Controllers.CalculaJurosController.GetAsync(System.Double,System.Int32)">
             <summary>
             Método Calcula Juros Composto
             </summary>

@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using CalculoJuros.Application.Interfaces.IServices;
+using CalculoJuros.Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using SimpleInjector;
@@ -20,6 +22,8 @@ namespace CalculoJuros.Configuration.SimpleInjectorConfig
 
         public static void RegisterTypes(this Container container)
         {
-              }
+            //Application Services -------
+            container.Register<ICalculoJurosService, CalculoJurosService>(Lifestyle.Scoped);
+        }
     }
 }
