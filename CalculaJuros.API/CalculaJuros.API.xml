@@ -12,6 +12,12 @@
             <param name="meses">Número de meses utilizado para o calculo</param>   
             <response code="200">Resultado</response>
         </member>
+        <member name="M:CalculaJuros.API.Controllers.HomeController.GetCheckTask">
+            <summary>
+            Checar disponibilidade de API
+            </summary>
+            <response code="200">OK</response>
+        </member>
         <member name="M:CalculaJuros.API.Controllers.ShowCodeController.Get">
             <summary>
             Método retorna url de onde encontra-se o código no github

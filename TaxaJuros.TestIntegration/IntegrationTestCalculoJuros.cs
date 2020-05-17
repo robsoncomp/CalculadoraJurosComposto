@@ -1,5 +1,9 @@
+using CalculaJuros.API;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Hosting;
-using System;
+using System.Text.Json;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -10,28 +14,26 @@ namespace TaxaJuros.TestIntegration
         [Fact]
         public async Task TesteEndPointCalculoJuros()
         {
-            // Arrange
+
             var hostBuilder = new HostBuilder()
                 .ConfigureWebHost(webHost =>
                 {
-            // Add TestServer
-            webHost.UseTestServer();
-                    webHost.UseStartup<WebApplication41.Startup>();
+                    webHost.UseTestServer();
+                    webHost.UseStartup<Startup>();
                 });
 
-            // Create and start up the host
             var host = await hostBuilder.StartAsync();
 
-            // Create an HttpClient which is setup for the test host
             var client = host.GetTestClient();
 
-            // Act
-            var response = await client.GetAsync("/Home/Test");
+            var response = await client.GetAsync("v1/CalculaJuros");
 
-            // Assert
-            var responseString = await response.Content.ReadAsStringAsync();
-            responseString.Should().Be("This is a test");
+            var conteudo = await response.Content.ReadAsStringAsync();
 
+            string responseString = JsonSerializer.Deserialize<string>(conteudo);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("Erro Interno: Não foi possível se comunicar com a API da taxa de juros", responseString);
         }
     }
 }
